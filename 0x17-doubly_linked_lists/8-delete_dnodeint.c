@@ -1,55 +1,65 @@
 #include "lists.h"
+#include <stdlib.h>
 
 /**
- * delete_dnodeint_at_index - Delete node at nth index
- *
- * @head: Head of node
- *
- * @index: index
- *
- * Return: 1 succeed, -1 if fail
+ * delete_dnodeint_at_index - delete node at give index
+ * @head:list
+ * @index:given index
+ * Return: -1 or 0
  */
-
 int delete_dnodeint_at_index(dlistint_t **head, unsigned int index)
 {
-	dlistint_t *node;
-	unsigned int count;
+	dlistint_t *start;
+	unsigned int i;
+	unsigned int len;
+	len = len_node(&head);
 
+	start = *head;
 	if (*head == NULL)
 		return (-1);
-
-	node = *head;
 	if (index == 0)
 	{
-		*head = node->next;
-		if (node->next != NULL)
-		{
-			node->next->prev = NULL;
-		}
-		free(node);
+		start = start->next;
+		free(*head);
+		*head = start;
+		if (start != NULL)
+			start->prev = NULL;
 		return (1);
 	}
-	for (count = 0; node != NULL && count < index - 1 ; count++)
+	for (i = 0; i <= index - 1; i++)
 	{
-		node = node->next;
+		start = start->next;
+		if (!start)
+			return (-1);
 	}
-	if (node == NULL || node->next == NULL)
+	if (len - 1 == index)
 	{
-		return (-1);
+		start->prev->next = NULL;
+		free(start);
+		return (1);
 	}
+	start->prev->next = start->next;
+	start->next->prev = start->prev;
+	free(start);
+	return (1);
+}
 
-	if (node->next->next != NULL)
+/**
+ * len_node - list len
+ *
+ * @node:list
+ * Return:unsigned int
+ */
+unsigned int len_node(dlistint_t **node)
+{
+	unsigned int len = 0;
+	dlistint_t *start;
+
+	start = *node;
+	while (start != NULL)
 	{
-		node->next = node->next->next;
-		free(node->next->prev);
-		node->next->prev = node;
-		return (1);
+		len += 1;
+		start = start->next;
 	}
-	else
-	{
-		free(node->next);
-		node->next = NULL;
-		return (1);
-	}
-	return (-1);
+	return (len);
 }

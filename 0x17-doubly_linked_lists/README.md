@@ -1,2 +1,2 @@
-# low level programming
-# alx-low_level_programming
+# 0x17-doubly_linked_lists
+This repo contains ALX codes for C doubly linked lists
